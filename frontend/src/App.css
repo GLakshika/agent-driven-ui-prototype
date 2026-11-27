@@ -1,0 +1,190 @@
+.app {
+  min-height: 100vh;
+  background: #f4f6f9;
+  color: #1e293b;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  height: 65px;
+  background: #172033;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+}
+
+.header h1 {
+  font-size: 20px;
+}
+
+.status {
+  background: #334155;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.workspace {
+  display: flex;
+  min-height: calc(100vh - 65px);
+}
+
+.chat-panel {
+  width: 350px;
+  padding: 25px;
+  background: white;
+  border-right: 1px solid #e2e8f0;
+}
+
+.chat-panel h2,
+.canvas-panel h2 {
+  font-size: 20px;
+  margin-top: 0;
+}
+
+.description {
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.examples {
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+.examples p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.examples button {
+  margin-right: 8px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  color: #4338ca;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.chat-panel textarea {
+  width: 100%;
+  height: 110px;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  resize: vertical;
+  font-size: 14px;
+}
+
+.generate-button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.generate-button:hover {
+  background: #4338ca;
+}
+
+.canvas-panel {
+  flex: 1;
+  padding: 30px;
+}
+
+.empty-state {
+  margin-top: 40px;
+  padding: 50px 20px;
+  background: white;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  text-align: center;
+  color: #64748b;
+}
+
+.empty-state h3 {
+  color: #334155;
+}
+
+.generated-ui {
+  max-width: 600px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.component-badge {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.generated-ui h3 {
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 14px;
+  background: white;
+}
+
+.save-button {
+  margin-top: 10px;
+  padding: 12px 18px;
+  background: #0f766e;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background: #115e59;
+}
+
+@media (max-width: 800px) {
+  .workspace {
+    flex-direction: column;
+  }
+
+  .chat-panel {
+    width: auto;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+}
