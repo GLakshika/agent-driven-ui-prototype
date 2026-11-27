@@ -7,13 +7,17 @@ interface UiField {
   type: string;
 }
 
-interface GenerateResponse {
-  message: string;
+interface ComponentResponse {
   component: string;
   ui: {
     title: string;
     fields: UiField[];
   };
+}
+
+interface GenerateResponse {
+  message: string;
+  components: ComponentResponse[];
 }
 
 function App() {
@@ -81,53 +85,53 @@ function App() {
         <section className="canvas-panel">
           <h2>Workspace</h2>
 
-          {!result ? (
+          {!result || result.components.length === 0 ? (
             <div className="empty-state">
               <h3>Your workspace is empty</h3>
               <p>
-                Enter a request in the assistant to generate a configuration UI.
+                {result?.message ||
+                  "Enter a request in the assistant to generate a configuration UI."}
               </p>
             </div>
-          ) : result.component === "NONE" ? (
-            <div className="empty-state">
-              <h3>No component selected</h3>
-              <p>{result.message}</p>
-            </div>
           ) : (
-            <div className="generated-ui">
-              <div className="component-badge">
-                {result.component} COMPONENT
-              </div>
-
-              <h3>{result.ui.title}</h3>
-
-              <form>
-                {result.ui.fields.map((field) => (
-                  <div className="form-field" key={field.name}>
-                    <label>{field.label}</label>
-
-                    {field.type === "select" ? (
-                      <select>
-                        <option value="">Select an option</option>
-                        <option value="GET">GET</option>
-                        <option value="POST">POST</option>
-                        <option value="PUT">PUT</option>
-                        <option value="DELETE">DELETE</option>
-                      </select>
-                    ) : (
-                      <input
-                        type={field.type}
-                        placeholder={`Enter ${field.label.toLowerCase()}`}
-                      />
-                    )}
+            <div className="component-container">
+              {result.components.map((component, index) => (
+                <div className="generated-ui" key={index}>
+                  <div className="component-badge">
+                    {component.component} COMPONENT
                   </div>
-                ))}
-              </form>
 
-              <button className="save-button">Save Configuration</button>
+                  <h3>{component.ui.title}</h3>
+
+                  <form>
+                    {component.ui.fields.map((field) => (
+                      <div className="form-field" key={field.name}>
+                        <label>{field.label}</label>
+
+                        {field.type === "select" ? (
+                          <select>
+                            <option value="">Select an option</option>
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                          </select>
+                        ) : (
+                          <input
+                            type={field.type}
+                            placeholder={`Enter ${field.label.toLowerCase()}`}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </form>
+
+                  <button className="save-button">Save Configuration</button>
+                </div>
+              ))}
             </div>
           )}
-        </section>
+        </section> 
       </div>
     </div>
   );

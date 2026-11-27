@@ -15,10 +15,14 @@ type UiSchema record {
     UiField[] fields;
 };
 
-type GenerateResponse record {
-    string message;
+type ComponentResponse record {
     string component;
     UiSchema ui;
+};
+
+type GenerateResponse record {
+    string message;
+    ComponentResponse[] components;
 };
 
 listener http:Listener httpListener = new (8080);
@@ -27,12 +31,14 @@ service /api on httpListener {
 
     resource function post generate(GenerateRequest request) returns GenerateResponse {
 
-        string prompt = request.prompt;
+        string prompt = request.prompt.toLowerAscii();
 
-        if prompt == "http" {
+        ComponentResponse[] components = [];
 
-            return {
-                message: "HTTP component selected",
+        // HTTP component
+        if prompt.includes("http") || prompt.includes("api") || prompt.includes("endpoint") {
+
+            components.push({
                 component: "HTTP",
                 ui: {
                     title: "HTTP Request Configuration",
@@ -42,12 +48,28 @@ service /api on httpListener {
                         {name: "headers", label: "Headers", 'type: "text"}
                     ]
                 }
-            };
+            });
+        }
 
-        } else if prompt == "database" {
+        // Transformation component
+        if prompt.includes("transform") || prompt.includes("convert") || prompt.includes("mapping") || prompt.includes("json") {
 
-            return {
-                message: "Database component selected",
+            components.push({
+                component: "TRANSFORM",
+                ui: {
+                    title: "Data Transformation",
+                    fields: [
+                        {name: "source", label: "Source Data", 'type: "text"},
+                        {name: "target", label: "Target Structure", 'type: "text"}
+                    ]
+                }
+            });
+        }
+
+        // Database component
+        if prompt.includes("database") || prompt.includes("postgres") || prompt.includes("sql") || prompt.includes("mysql") {
+
+            components.push({
                 component: "DATABASE",
                 ui: {
                     title: "Database Configuration",
@@ -58,32 +80,17 @@ service /api on httpListener {
                         {name: "username", label: "Username", 'type: "text"}
                     ]
                 }
-            };
-
-        } else if prompt == "transform" {
-
-            return {
-                message: "Transformation component selected",
-                component: "TRANSFORM",
-                ui: {
-                    title: "Data Transformation",
-                    fields: [
-                        {name: "source", label: "Source Data", 'type: "text"},
-                        {name: "target", label: "Target Structure", 'type: "text"}
-                    ]
-                }
-            };
-
-        } else {
-
-            return {
-                message: "No matching component found",
-                component: "NONE",
-                ui: {
-                    title: "",
-                    fields: []
-                }
-            };
+            });
         }
+
+        string message = components.length() > 0
+            ? "Components selected successfully"
+            : "No matching component found";
+
+        return {
+            message,
+            components
+        };
     }
+        
 }
