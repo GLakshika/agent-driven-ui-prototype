@@ -17,6 +17,7 @@ type UiSchema record {
 
 type ComponentResponse record {
     string component;
+    string reason;
     UiSchema ui;
 };
 
@@ -36,10 +37,18 @@ service /api on httpListener {
         ComponentResponse[] components = [];
 
         // HTTP component
-        if prompt.includes("http") || prompt.includes("api") || prompt.includes("endpoint") {
-
+        if prompt.includes("http") ||
+        prompt.includes("api") ||
+        prompt.includes("endpoint") ||
+        prompt.includes("web service") ||
+        prompt.includes("remote service") ||
+        prompt.includes("fetch") ||
+        prompt.includes("retrieve") ||
+        prompt.includes("call") ||
+        prompt.includes("request") {
             components.push({
                 component: "HTTP",
+                reason: "Selected to retrive a data from external API.",
                 ui: {
                     title: "HTTP Request Configuration",
                     fields: [
@@ -52,10 +61,17 @@ service /api on httpListener {
         }
 
         // Transformation component
-        if prompt.includes("transform") || prompt.includes("convert") || prompt.includes("mapping") || prompt.includes("json") {
-
+        if prompt.includes("transform") ||
+        prompt.includes("convert") ||
+        prompt.includes("mapping") ||
+        prompt.includes("json") ||
+        prompt.includes("reshape") ||
+        prompt.includes("format") ||
+        prompt.includes("modify data") ||
+        prompt.includes("process data") {
             components.push({
                 component: "TRANSFORM",
+                reason: "Selected to transform the retrieved data into the required structure.",
                 ui: {
                     title: "Data Transformation",
                     fields: [
@@ -67,10 +83,18 @@ service /api on httpListener {
         }
 
         // Database component
-        if prompt.includes("database") || prompt.includes("postgres") || prompt.includes("sql") || prompt.includes("mysql") {
-
+        if prompt.includes("database") ||
+        prompt.includes("postgres") ||
+        prompt.includes("sql") ||
+        prompt.includes("mysql") ||
+        prompt.includes("store data") ||
+        prompt.includes("save data") ||
+        prompt.includes("persist") ||
+        prompt.includes("relational store") ||
+        prompt.includes("insert") {
             components.push({
                 component: "DATABASE",
+                reason:"Selected to store the processed data in a database.",
                 ui: {
                     title: "Database Configuration",
                     fields: [

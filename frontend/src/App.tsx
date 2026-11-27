@@ -9,6 +9,7 @@ interface UiField {
 
 interface ComponentResponse {
   component: string;
+  reason: string;
   ui: {
     title: string;
     fields: UiField[];
@@ -172,6 +173,10 @@ function App() {
                     </div>
 
                     <h3>{component.ui.title}</h3>
+                    <div className="component-reason">
+                      <strong>Why this component?</strong>
+                      <p>{component.reason}</p>
+                    </div>
                     <button
                       className="remove-button"
                       onClick={() => handleRemoveComponent(component.component)}
