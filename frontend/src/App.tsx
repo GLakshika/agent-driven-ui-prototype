@@ -24,6 +24,67 @@ function App() {
   const [prompt, setPrompt] = useState("");
   const [result, setResult] = useState<GenerateResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [configurations, setConfigurations] = useState<Record<string, Record<string, string>>>({});
+  const [savedComponents, setSavedComponents] = useState<Record<string, boolean>>({});
+  const [savedData, setSavedData] = useState<Record<string, Record<string, string>>>({});
+  const [workflowPrompt, setWorkflowPrompt] = useState("");
+
+  const handleSaveConfiguration = (componentName: string) => {
+    setSavedData((prev) => ({
+      ...prev,
+      [componentName]: { ...configurations[componentName] },
+    }));
+
+    setSavedComponents((prev) => ({
+      ...prev,
+      [componentName]: true,
+    }));
+  };
+
+  const handleFieldChange = (
+    componentName: string,
+    fieldName: string,
+    value: string
+  ) => {
+    setConfigurations((prev) => ({
+      ...prev,
+      [componentName]: {
+        ...prev[componentName],
+        [fieldName]: value,
+      },
+    }));
+  };
+
+  const handleRemoveComponent = (componentName: string) => {
+    setResult((prev) =>
+      prev
+        ? {
+            ...prev,
+            components: prev.components.filter(
+              (component) => component.component !== componentName
+            ),
+          }
+        : prev
+    );
+
+    setConfigurations((prev) => {
+      const updated = { ...prev };
+      delete updated[componentName];
+      return updated;
+    });
+
+    setSavedComponents((prev) => {
+      const updated = { ...prev };
+      delete updated[componentName];
+      return updated;
+    });
+
+    setSavedData((prev) => {
+      const updated = { ...prev };
+      delete updated[componentName];
+      return updated;
+    });
+  };
 
   async function generateUI() {
     if (!prompt.trim()) return;
@@ -41,6 +102,7 @@ function App() {
 
       const data: GenerateResponse = await response.json();
       setResult(data);
+      setWorkflowPrompt(prompt);
     } catch (error) {
       alert("Could not connect to Ballerina backend.");
       console.error(error);
@@ -84,6 +146,12 @@ function App() {
 
         <section className="canvas-panel">
           <h2>Workspace</h2>
+          {result && result.components.length > 0 && (
+            <div className="workflow-header">
+              <h3>Generated Integration Workflow</h3>
+              <p>{workflowPrompt}</p>
+            </div>
+          )}
 
           {!result || result.components.length === 0 ? (
             <div className="empty-state">
@@ -95,41 +163,94 @@ function App() {
             </div>
           ) : (
             <div className="component-container">
+            
               {result.components.map((component, index) => (
-                <div className="generated-ui" key={index}>
-                  <div className="component-badge">
-                    {component.component} COMPONENT
-                  </div>
+                <div className="flow-step" key={index}>
+                  <div className="generated-ui">
+                    <div className="component-badge">
+                      {component.component} COMPONENT
+                    </div>
 
-                  <h3>{component.ui.title}</h3>
+                    <h3>{component.ui.title}</h3>
+                    <button
+                      className="remove-button"
+                      onClick={() => handleRemoveComponent(component.component)}
+                    >
+                      Remove Component
+                    </button>
 
-                  <form>
-                    {component.ui.fields.map((field) => (
-                      <div className="form-field" key={field.name}>
-                        <label>{field.label}</label>
+                    <form>
+                      {component.ui.fields.map((field) => (
+                        <div className="form-field" key={field.name}>
+                          <label>{field.label}</label>
 
-                        {field.type === "select" ? (
-                          <select>
-                            <option value="">Select an option</option>
-                            <option value="GET">GET</option>
-                            <option value="POST">POST</option>
-                            <option value="PUT">PUT</option>
-                            <option value="DELETE">DELETE</option>
-                          </select>
-                        ) : (
-                          <input
-                            type={field.type}
-                            placeholder={`Enter ${field.label.toLowerCase()}`}
-                          />
+                          {field.type === "select" ? (
+                            <select
+                              value={configurations[component.component]?.[field.name] || ""}
+                              onChange={(e) =>
+                                handleFieldChange(
+                                  component.component,
+                                  field.name,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="">Select an option</option>
+                              <option value="GET">GET</option>
+                              <option value="POST">POST</option>
+                              <option value="PUT">PUT</option>
+                              <option value="DELETE">DELETE</option>
+                            </select>
+                          ) : (
+                            <input
+                              type={field.type}
+                              value={configurations[component.component]?.[field.name] || ""}
+                              placeholder={`Enter ${field.label.toLowerCase()}`}
+                              onChange={(e) =>
+                                handleFieldChange(
+                                  component.component,
+                                  field.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </form>
+
+                    <button
+                      className="save-button"
+                      onClick={() => handleSaveConfiguration(component.component)}
+                    >
+                      Save Configuration
+                    </button>
+
+                    {savedComponents[component.component] && (
+                      <div className="saved-summary">
+                        <p className="saved-message">Configuration Saved</p>
+                        <h4>Saved Details</h4>
+
+                        {Object.entries(savedData[component.component] || {}).map(
+                          ([key, value]) => (
+                            <div className="saved-item" key={key}>
+                              <strong>{key}:</strong> {value || "Not entered"}
+                            </div>
+                          )
                         )}
                       </div>
-                    ))}
-                  </form>
+                    )}
+                  </div>
 
-                  <button className="save-button">Save Configuration</button>
+              {index < result.components.length - 1 && (
+                <div className="flow-connector">
+                  <span>↓</span>
                 </div>
+                )}
+              </div>
               ))}
-            </div>
+            </div>       
+            
           )}
         </section> 
       </div>

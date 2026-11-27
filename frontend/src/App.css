@@ -194,3 +194,82 @@
   flex-direction: column;
   gap: 25px;
 }
+.saved-message {
+  color: #16a34a;
+  font-weight: 600;
+  margin-top: 10px;
+}
+.saved-summary {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  background: rgba(128, 128, 128, 0.08);
+}
+
+.saved-summary h4 {
+  margin-bottom: 10px;
+}
+
+.saved-item {
+  padding: 6px 0;
+  word-break: break-word;
+}
+
+.component-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.flow-step .generated-ui {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.flow-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  font-size: 28px;
+  color: #888;
+}
+
+.workflow-header {
+  margin: 20px 0;
+  padding: 16px;
+  border-radius: 10px;
+  background: rgba(128, 128, 128, 0.08);
+}
+
+.workflow-header h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.workflow-header p {
+  margin: 0;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.remove-button {
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.remove-button:hover {
+  background: rgba(220, 38, 38, 0.08);
+}
